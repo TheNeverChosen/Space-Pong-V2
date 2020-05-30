@@ -3,32 +3,30 @@ package custom_components;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import javax.swing.JComponent;
-import net.coobird.thumbnailator.Thumbnails;
-
-//USE UM MÉTODO MELHOR DE RESIZE PARA A IMAGE
+import utils.ImageManipulation;
 
 public class JPictureBox extends JComponent {
 
-  private BufferedImage image;
+  private BufferedImage img;
   private Dimension d;
+  private ImageManipulation imageEdit=new ImageManipulation();
 
   public JPictureBox() {
     start();
-    this.image=null;
+    this.img=null;
     this.d=new Dimension(-1, -1);
   }
 
   public JPictureBox(BufferedImage image){
     start();
-    this.image=image;
+    this.img=image;
     this.d=new Dimension(-1, -1);
   }
 
   public JPictureBox(BufferedImage image, Dimension d){
     start();
-    this.image=image;
+    this.img=image;
     this.d=d;
   }
 
@@ -39,43 +37,16 @@ public class JPictureBox extends JComponent {
   @Override
   public void paintComponent(Graphics g) {
     super.paintComponents(g);
-    if (image != null) {
-
-      int height=(int)d.getHeight(), width=(int)d.getWidth();
-      BufferedImage resizedImage;
-      
-      try {
-        if(height<0 && width<0) resizedImage=image;
-        
-        else if(height<0)
-          resizedImage = Thumbnails.of(image).width(width).asBufferedImage();
-        
-        else if(width<0)
-          resizedImage = Thumbnails.of(image).height(height).asBufferedImage();
-
-        else
-          resizedImage = Thumbnails.of(image).forceSize(width, height).asBufferedImage();
-        
-        System.out.println("ANTES:\nw = "+width+" h = "+height);
-        System.out.println("w = "+resizedImage.getWidth()+" h = "+resizedImage.getHeight());
-        
-        width=resizedImage.getWidth(); height=resizedImage.getHeight();
-        
-        System.out.println("\nDEPOIS:\nw = "+width+" h = "+height);
-        System.out.println("w = "+resizedImage.getWidth()+" h = "+resizedImage.getHeight());
-        
-      } catch (IOException ex) {
-        System.out.println(ex.getMessage());
-        return;
-      }
+    BufferedImage displayImg = imageEdit.resize(img, d);
+    if (displayImg != null) {
+      int height=displayImg.getHeight(), width=displayImg.getWidth();
       
       setAllSizes(new Dimension(width, height));
-      g.drawImage(resizedImage, 0, 0, width, height, null);
+      g.drawImage(displayImg, 0, 0, width, height, null);
       
       g.dispose();
       revalidate();
     }
-    else System.out.println("oi");
   }
 
   private void setAllSizes(Dimension d){
@@ -84,12 +55,12 @@ public class JPictureBox extends JComponent {
     setMaximumSize(d);
   }
 
-  public BufferedImage getImage() {
-    return image;
+  public BufferedImage getImg() {
+    return img;
   }
 
-  public void setImage(BufferedImage image) {
-    this.image = image;
+  public void setImg(BufferedImage img) {
+    this.img = img;
   }
     
   public void setDimension(Dimension d){

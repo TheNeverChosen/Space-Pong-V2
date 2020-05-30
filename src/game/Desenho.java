@@ -1,59 +1,76 @@
 package game;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
+import utils.ImageManipulation;
+import utils.Location;
 
-import javax.imageio.ImageIO;
-
-//ESTA CLASSE DEVE SE OBRIGATORIAMENTE MANTIDA NO PROJETO. QUALQUER ALTERA��O REALIZADA DEVE OBEDECER A HIERARQUIA.
+//ESTA CLASSE DEVE SE OBRIGATORIAMENTE MANTIDA NO PROJETO. QUALQUER ALTERAÇÃO REALIZADA DEVE OBEDECER A HIERARQUIA.
 public class Desenho {
-	
-	private int x;
-	private int y;
-	private BufferedImage img;
+   
+  private final ImageManipulation imageEdit=new ImageManipulation();
+  private Dimension size;
+  private Location location;
+	private BufferedImage img, resizedImg, displayImg;
 	
 	public Desenho() {}
 	
-	public Desenho(int x, int y, String path) {
-		this.setX(x);
-		this.setY(y);
-		this.setImg(path);
+	public Desenho(String path, Location location) {
+		initialize(path, location, new Dimension(-1, -1));
 	}
+  
+  public Desenho(String path, Location location, Dimension size) {
+		initialize(path, location, size);
+	}
+  
+  private void initialize(String path, Location location, Dimension size){
+    this.location = location;
+		this.img = imageEdit.createBufferedImage(path);
+    this.size = size;
+    setAuxiliarImages();
+  }
 
-	public int getX() {
-		return x;
-	}
+  public Location getLocation() {
+    return location;
+  }
 
-	public void setX(int x) {
-		this.x = x;
-	}
+  public void setLocation(Location location) {
+    this.location = location;
+  }
 
-	public int getY() {
-		return y;
-	}
+  public Dimension getSize() {
+    return size;
+  }
 
-	public void setY(int y) {
-		this.y = y;
-	}
+  public void setSize(Dimension size) {
+    this.size = size;
+    setAuxiliarImages();
+  }
+  
+  private void setAuxiliarImages() {
+    displayImg = resizedImg = imageEdit.resize(img, size);
+  }
 
-	public BufferedImage getImg() {
-		return img;
+  public void setImg(BufferedImage img) {
+    this.img = img;
+    setAuxiliarImages();
+  }
+  
+  public void setImg(String path) {
+    img = imageEdit.createBufferedImage(path);
+    setAuxiliarImages();
 	}
+  
+  public void rotateDisplayImg(double degrees){
+    displayImg = imageEdit.rotate(resizedImg, degrees);
+  }
 
-	public void setImg(String path) {
-		try {
-      URL url = getClass().getResource("/images/"+path);
-			img = ImageIO.read(url);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void desenhar(Graphics g) {
-		//Desenhando a imagem na tela
-		g.drawImage(this.getImg(), this.getX(), this.getY(), null);
+		//Desenhando a imagem na tela, mas antes verificando se a imagem é válida
+    if(displayImg!=null)
+      g.drawImage(displayImg, location.getX(), location.getY(), null);
+    else System.out.println("null");
 	}
+  
 }

@@ -1,6 +1,7 @@
 package screens;
 
 import custom_components.JPictureBox;
+import game.Principal;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -11,15 +12,17 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import utils.Utils;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import utils.ImageManipulation;
 
 public class Menu extends BasePanel{
   
-  Utils utils = new Utils();
+  ImageManipulation imageManipulation = new ImageManipulation();
   Font normalFont=new Font("SansSerif", Font.BOLD, 14);
   
-  BufferedImage image = utils.createBufferedImage("/images/logo.png");
-  JPictureBox logo = new JPictureBox(image, new Dimension(250, -1));
+  BufferedImage image = imageManipulation.createBufferedImage("/images/logo.png");
+  JPictureBox logo = new JPictureBox(image);
   JButton[] buttons={
     new JButton("Jogar"),
     new JButton("Instruções"),
@@ -58,6 +61,25 @@ public class Menu extends BasePanel{
   }
   
   private void events(){
+    
+    //EVITAR ALTERAR ESSE MÉTODO
+    buttons[0].addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        // Destroying current jframe to switch to game jframe
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(Menu.this);
+        topFrame.setVisible(false);
+        topFrame.dispose();
+        
+        // Showing game JFrame
+        Principal t = new Principal("Space Pong V2");
+        t.setSize(1000, 600);
+        t.setLocationRelativeTo(null);
+        t.createBufferStrategy(1);		
+        t.setVisible(true);
+        t.createBufferStrategy(2);
+      }
+    });
     
     buttons[3].addActionListener(new ActionListener() {
       @Override
