@@ -1,8 +1,9 @@
-package game;
+package game.models;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import static java.lang.Math.round;
 import utils.ImageManipulation;
 import utils.Location;
 
@@ -15,9 +16,17 @@ public class Desenho {
 	private BufferedImage img, resizedImg, displayImg;
 	
 	public Desenho() {}
+  
+  public Desenho(String path) {
+		initialize(path, new Location(0, 0), new Dimension(-1, -1));
+	}
 	
 	public Desenho(String path, Location location) {
 		initialize(path, location, new Dimension(-1, -1));
+	}
+  
+  public Desenho(String path, Dimension size) {
+		initialize(path, new Location(0, 0), size);
 	}
   
   public Desenho(String path, Location location, Dimension size) {
@@ -30,6 +39,14 @@ public class Desenho {
     this.size = size;
     setAuxiliarImages();
   }
+  
+  public int getX(){
+    return (int) Math.round(location.getX());
+  }
+  
+  public int getY(){
+    return (int) Math.round(location.getY());
+  }
 
   public Location getLocation() {
     return location;
@@ -37,6 +54,14 @@ public class Desenho {
 
   public void setLocation(Location location) {
     this.location = location;
+  }
+  
+  public int getWidth(){
+    return (int)round(size.getWidth());
+  }
+  
+  public int getHeight(){
+    return (int) round(size.getHeight());
   }
 
   public Dimension getSize() {
@@ -69,8 +94,10 @@ public class Desenho {
 	public void desenhar(Graphics g) {
 		//Desenhando a imagem na tela, mas antes verificando se a imagem é válida
     if(displayImg!=null)
-      g.drawImage(displayImg, location.getX(), location.getY(), null);
-    else System.out.println("null");
+      g.drawImage(displayImg, (int) Math.round(location.getX()),
+        (int) Math.round(location.getY()), null);
+      
+    else System.out.println("null display image");
 	}
   
 }

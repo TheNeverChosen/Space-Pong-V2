@@ -12,18 +12,19 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import start.Window;
+import utils.FileIO;
 import utils.ImageManipulation;
 
 public class Menu extends BasePanel{
   
-  ImageManipulation imageManipulation = new ImageManipulation();
-  Font normalFont=new Font("SansSerif", Font.BOLD, 14);
-  
-  BufferedImage image = imageManipulation.createBufferedImage("/images/logo.png");
-  JPictureBox logo = new JPictureBox(image);
-  JButton[] buttons={
+  private ImageManipulation imageManipulation = new ImageManipulation();
+  private Font normalFont=new Font("SansSerif", Font.BOLD, 14);
+  private BufferedImage image = imageManipulation.createBufferedImage("/images/logo.png");
+  private JPictureBox logo = new JPictureBox(image);
+  private JButton[] buttons={
     new JButton("Jogar"),
     new JButton("Instruções"),
     new JButton("Pontuações"),
@@ -62,22 +63,50 @@ public class Menu extends BasePanel{
   
   private void events(){
     
-    //EVITAR ALTERAR ESSE MÉTODO
+    
     buttons[0].addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // Destroying current jframe to switch to game jframe
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(Menu.this);
-        topFrame.setVisible(false);
-        topFrame.dispose();
+        boolean valido=false;
         
-        // Showing game JFrame
-        Principal t = new Principal("Space Pong V2");
-        t.setSize(1000, 600);
-        t.setLocationRelativeTo(null);
-        t.createBufferStrategy(1);		
-        t.setVisible(true);
-        t.createBufferStrategy(2);
+        do{
+          String name = JOptionPane.showInputDialog(Menu.this, "Informe o nome do jogador (Apenas as 3 primeiras letras serão utilizadas");
+          
+          if(name==null) break;
+          else{
+            name = name.trim();
+            if(name.length()>=3){
+              //EVITAR ALTERAR ESSE MÉTODO
+              
+              valido=true;
+              // Destroying current jframe to switch to game jframe
+              Window topFrame = (Window) SwingUtilities.getWindowAncestor(Menu.this);
+              topFrame.setVisible(false);
+              topFrame.dispose();
+
+              // Showing game JFrame
+              Principal t = new Principal("Space Pong V2", name.subSequence(0, 3).toString());
+            }
+          }
+          if(!valido) JOptionPane.showMessageDialog(Menu.this, "Informe um nome com 3 letras válidas");
+        }while(!valido);
+        
+      }
+    });
+    
+    buttons[1].addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Window topFrame = (Window) SwingUtilities.getWindowAncestor(Menu.this);
+        topFrame.changePanel(new Instructions());
+      }
+    });
+    
+    buttons[2].addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Window topFrame = (Window) SwingUtilities.getWindowAncestor(Menu.this);
+        topFrame.changePanel(new Scores());
       }
     });
     

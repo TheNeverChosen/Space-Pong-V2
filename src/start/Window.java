@@ -10,7 +10,7 @@ public class Window extends JFrame{
   public Window() {
     super();
     setTitle("Pong V2");
-    setPreferredSize(new Dimension(800, 600));
+    setPreferredSize(new Dimension(1000, 600));
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     pack();
     setLocationRelativeTo(null);
@@ -21,6 +21,5 @@ public class Window extends JFrame{
     getContentPane().add(c);
     revalidate();
   }
-  
   
 }

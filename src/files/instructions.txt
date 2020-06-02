@@ -1,0 +1,14 @@
+Olá! Bem-vindo ao SpacePong V2.
+
+Este é um jogo baseado no clássico jogo Pong. Nesta versão do jogo o objetivo é rebater a maior quantidade de vezes, sem que ela escape do alcance da sua plataforma (raquete).
+
+Cada vez que você rebate, você ganha 1 pontuação de Rally. Com esta pontuação você pode entrar no Rank de Top 10 Maiores Rally's, e é exatamente este o objetivo. A pontuação funciona da seguinte forma:
+  - Para cada rebatida da plataforma na bola, você ganha mais 1 ponto de Rally;
+  - Quando a bola sai da tela pelo lado do jogador ou pelo lado do inimigo, a pontuação Rally é zerada.
+  - Se quem venceu a rodada foi o inimigo: a pontuação Rally é zerada e não é utilizada para tentar entrar no Top 10 Rally.
+  - Caso a rodada tenha sido vencida pelo jogador: a pontuação Rally é zerada e é utilizada para tentar entrar no Top 10 Rally.
+
+A cada rebatida na bola, ela vai ganhando velocidade, então fique atento para acertá-la.
+
+Para sair do jogo e voltar ao menu, aperte ESC a qualquer momento.
+
