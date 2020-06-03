@@ -110,15 +110,12 @@ public class Principal extends JFrame implements KeyListener {
    }
   }
 
-  public void saveScore(){
-    if(scoreHUD.getScore()<=0) return;
-    
+  public void saveScore(){    
     Score score = new Score(player.getName(), scoreHUD.getScore());
     
     // Se a lista adicionou um novo score e se alterou, então o arquivo é salvo
     if (scoresList.addScore(score))
       fileIO.saveObjectFile(scoresList, "scores.dat");
-    
   }
 
  //EVITAR ALTERAR ESSE MÉTODO

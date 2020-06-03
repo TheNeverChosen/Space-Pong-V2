@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,17 +14,31 @@ import java.io.UnsupportedEncodingException;
 
 public class FileIO {
 
-  public FileIO() { }
+  private final String APP_FOLDER = "SpacePong";
+  
+  public FileIO() {
+    getAppFileFolder();
+  }
+  
+  private String getAppFileFolder(){
+    String fileFolder = System.getenv("APPDATA") + "\\" + APP_FOLDER;
+
+    String os = System.getProperty("os.name").toUpperCase();
+    if (os.contains("WIN")) fileFolder = System.getenv("APPDATA") + "\\" + APP_FOLDER;
+    else if (os.contains("MAC"))fileFolder = System.getProperty("user.home") + "/Library/Application " + "Support"
+              + APP_FOLDER;
+    else if (os.contains("NUX")) fileFolder = System.getProperty("user.dir") + "." + APP_FOLDER;
+
+    File directory = new File(fileFolder);
+
+    if (!directory.exists()) directory.mkdir();
+    return fileFolder;
+  }
   
   public boolean saveObjectFile(Object object, String fileName){
-    
     try {
-      String filePath = "src\\files\\"+fileName;
-      
-      FileOutputStream fos = new FileOutputStream(filePath);
-      
+      FileOutputStream fos = new FileOutputStream(getAppFileFolder()+"\\"+fileName);
       ObjectOutputStream oos = new ObjectOutputStream(fos);
-      
       oos.writeObject(object);
       oos.close();
       return true;
@@ -35,8 +50,7 @@ public class FileIO {
   
   public Object readObjectFromFile(String fileName) {
     try {
-      String filePath = "src\\files\\"+fileName;
-      FileInputStream fileIn = new FileInputStream(new File(filePath));
+      FileInputStream fileIn = new FileInputStream(getAppFileFolder()+"\\"+fileName);
       ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 
       Object obj = objectIn.readObject();
@@ -54,7 +68,7 @@ public class FileIO {
     BufferedReader myBuffer;
     try {
       myBuffer = new BufferedReader(new InputStreamReader(
-              new FileInputStream("src\\files\\"+fileName), "UTF-8"));
+              getClass().getResourceAsStream("/files/"+fileName), "UTF-8"));
       
       StringBuilder text = new StringBuilder(myBuffer.readLine());
       String aux;
